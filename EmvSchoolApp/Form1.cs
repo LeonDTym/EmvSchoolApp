@@ -52,7 +52,11 @@ namespace EmvSchoolApp
 				{
 					targetFilePath = folderBrowserDialog.SelectedPath;
 					textBox2.Text = targetFilePath.ToString();
-
+					if (checkBox1.Checked)
+					{
+						// Сохраняем текст в файл
+						SaveText(textBox2.Text);
+					}
 				}
 			}
 		}
