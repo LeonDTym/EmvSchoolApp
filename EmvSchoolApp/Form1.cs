@@ -5,7 +5,7 @@ namespace EmvSchoolApp
 		private string sourceFilePath;
 		private string targetFilePath;
 		private string connectionString = "data source=cl-mssql-1-ag,1433;initial catalog=StudentCard;persist security info=True;user id=Checks;password=checks;MultipleActiveResultSets=True;App=EntityFramework&quot;";
-		private const string filePath = "savedText.txt";
+
 		public Form1()
 		{
 			InitializeComponent();
@@ -13,19 +13,20 @@ namespace EmvSchoolApp
 		}
 		private void LoadText()
 		{
-			if (File.Exists(filePath))
+			if (!String.IsNullOrEmpty(Properties.Settings.Default.ParSave))
 			{
-				// Загружаем текст из файла
-				textBox2.Text = File.ReadAllText(filePath);
-				targetFilePath = textBox2.Text;
-				checkBox1.Checked = true; // Устанавливаем чекбокс в состояние "отмечен"
-			}
+
+				targetFilePath = Properties.Settings.Default.ParSave;
+				textBox2.Text = targetFilePath;
+				checkBox1.Checked = true;
 		}
+	}
 		private void SaveText(string text)
 		{
-			// Сохраняем текст в файл
-			File.WriteAllText(filePath, text);
+			Properties.Settings.Default.ParSave = text;
+			Properties.Settings.Default.Save();
 		}
+
 		private void button1_Click(object sender, EventArgs e)
 		{
 			using (OpenFileDialog openFileDialog = new OpenFileDialog())
@@ -54,7 +55,6 @@ namespace EmvSchoolApp
 					textBox2.Text = targetFilePath.ToString();
 					if (checkBox1.Checked)
 					{
-						// Сохраняем текст в файл
 						SaveText(textBox2.Text);
 					}
 				}
@@ -156,12 +156,12 @@ namespace EmvSchoolApp
 			}
 			else
 			{
-				// Удаляем файл, если чекбокс снят
-				if (File.Exists(filePath))
+				if (!String.IsNullOrEmpty(Properties.Settings.Default.ParSave))
 				{
-					File.Delete(filePath);
-				}
+				Properties.Settings.Default.ParSave = null;
+				Properties.Settings.Default.Save();
 			}
+		}
 		}
 	}
 }
